@@ -1,5 +1,5 @@
 ## Telegram Database Backup
-Simple docker image to `cron` a database backup to a popular Telegram Bot.
+Simple docker image to `cron` a database backup to a Telegram Bot.
 
 
 ### Run
