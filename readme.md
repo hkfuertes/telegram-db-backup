@@ -34,7 +34,7 @@ docker build -t telegram-db-backup .
 version: '3.5'
 
 services:
-  rclone:
+  telegrambot:
     image: telegram-db-backup:latest # or the <tag> you specified on build...
     environment:
       - DATABASE_USER=${DATABASE_USER}
