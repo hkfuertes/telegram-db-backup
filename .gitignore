@@ -1,0 +1,4 @@
+*.sql
+LAST_MESSAGE
+test.sh
+.env
