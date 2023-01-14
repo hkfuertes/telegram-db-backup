@@ -6,15 +6,18 @@ RUN apk add tzdata
 RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime
 RUN echo "Europe/Madrid" >  /etc/timezone
 
-# Installing rclone
+# Installing dependencies
 RUN apk add unzip curl bash zip jq
-RUN curl https://rclone.org/install.sh | bash
 
 # Install mysql-client
 RUN apk add --no-cache mysql-client
 
-# Entry point
-COPY entrypoint.sh /entrypoint.sh
+# Copying all files
+COPY . .
+
+# Setting up permissions
+RUN chmod +x /upload_to_telegram.sh
+RUN chmod +x /backup.sh
 RUN chmod +x /entrypoint.sh
 
 #ENTRYPOINT ["crond", "-f"]
