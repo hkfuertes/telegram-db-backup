@@ -1,4 +1,4 @@
 *.sql
 LAST_MESSAGE
-test.sh
+docker-compose.yml
 .env
