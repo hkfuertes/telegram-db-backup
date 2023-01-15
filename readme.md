@@ -1,7 +1,6 @@
 ## Telegram Database Backup
 Simple docker image to `cron` a database backup to a Telegram Bot.
 
-
 ### Run
 You can run it via docker-compose, but there are several environment variables that need to be passed on:
 
