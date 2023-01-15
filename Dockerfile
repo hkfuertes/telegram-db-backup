@@ -12,12 +12,10 @@ RUN apk add unzip curl bash zip jq
 # Install mysql-client
 RUN apk add --no-cache mysql-client
 
-# Copying all files
-COPY . .
+# Copying files
+COPY entrypoint.sh .
 
 # Setting up permissions
-RUN chmod +x /upload_to_telegram.sh
-RUN chmod +x /backup.sh
 RUN chmod +x /entrypoint.sh
 
 #ENTRYPOINT ["crond", "-f"]
