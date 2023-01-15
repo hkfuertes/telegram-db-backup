@@ -12,8 +12,8 @@ RUN apk add unzip curl bash zip jq
 # Install mysql-client
 RUN apk add --no-cache mysql-client
 
-# Copying files
-COPY entrypoint.sh .
+# Copying file
+COPY entrypoint.sh /entrypoint.sh
 
 # Setting up permissions
 RUN chmod +x /entrypoint.sh
