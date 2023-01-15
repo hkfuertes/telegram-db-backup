@@ -35,6 +35,8 @@ version: '3.5'
 services:
   telegrambot:
     image: telegram-db-backup:latest # or the <tag> you specified on build...
+    # build:
+    #   context: .
     environment:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}

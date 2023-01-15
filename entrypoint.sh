@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Creating the upload script
-cat <<EOF >> /upload_to_telegram.sh
+cat <<EOF > /upload_to_telegram.sh
 #! /bin/bash
 # Usage: $ ./upload_to_telegram.sh <file_path>
 # TELEGRAM_TOKEN & CHAT_ID env variables must exist!
@@ -18,7 +18,7 @@ curl -s -F document=@"\$1" "https://api.telegram.org/bot\${TELEGRAM_TOKEN}/sendD
 EOF
 
 # Creating the backup script
-cat <<EOF >> /backup.sh
+cat <<EOF > /backup.sh
 #!/bin/bash
 
 DATE=\`date +"%d.%m.%Y"\`
