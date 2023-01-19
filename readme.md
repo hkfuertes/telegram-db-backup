@@ -15,14 +15,6 @@ You can run it via docker-compose, but there are several environment variables t
 | TELEGRAM_TOKEN | ******** | Telegram token from `BotFather` |
 | CHAT_ID | **** | Chat ID to where the backup will be sent. |
 
-To run it:
-
-```shell
-cp .env.dist .env
-nano .env # ... and edit all the variables
-docker-compose up -d
-```
-
 ### Integration with existing project
 To integrate into an existing project you can just first build the project:
 ```bash
