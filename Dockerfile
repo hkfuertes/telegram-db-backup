@@ -1,22 +1,16 @@
 FROM alpine
 LABEL author="Miguel Fuertes <hkfuertes@gmail.com>"
 
-# Changing Timezone
-RUN apk add tzdata
-RUN ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime
-RUN echo "Europe/Madrid" >  /etc/timezone
+# Timezone
+RUN apk add --no-cache tzdata \
+    && ln -fs /usr/share/zoneinfo/Europe/Madrid /etc/localtime \
+    && echo "Europe/Madrid" > /etc/timezone
 
-# Installing dependencies
-RUN apk add unzip curl bash zip jq
+# Dependencies + DB clients
+RUN apk add --no-cache curl bash zip unzip jq mysql-client postgresql-client
 
-# Install mysql-client
-RUN apk add --no-cache mysql-client
+# Copy scripts
+COPY scripts/ /scripts/
+RUN chmod +x /scripts/*.sh
 
-# Copying file
-COPY entrypoint.sh /entrypoint.sh
-
-# Setting up permissions
-RUN chmod +x /entrypoint.sh
-
-#ENTRYPOINT ["crond", "-f"]
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/scripts/entrypoint.sh"]
