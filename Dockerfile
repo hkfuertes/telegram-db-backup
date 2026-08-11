@@ -7,7 +7,7 @@ RUN apk add --no-cache tzdata \
     && echo "Europe/Madrid" > /etc/timezone
 
 # Dependencies + DB clients
-RUN apk add --no-cache curl bash zip unzip jq mysql-client postgresql-client
+RUN apk add --no-cache curl bash zip unzip jq docker-cli mysql-client postgresql-client
 
 # Copy scripts
 COPY scripts/ /scripts/

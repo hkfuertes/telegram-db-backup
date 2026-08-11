@@ -7,7 +7,7 @@ Simple docker image to `cron` a database backup to a Telegram Bot. Supports **My
 ghcr.io/hkfuertes/telegram-db-backup:master
 ```
 
-The image includes both `mysql-client` and `postgresql-client`. Use `DATABASE_TYPE` to select which one to use.
+The image includes `mysql-client`, `postgresql-client`, and `docker-cli`. Use `DATABASE_TYPE` to select the built-in dump command.
 
 ### Environment variables
 
@@ -22,6 +22,8 @@ The image includes both `mysql-client` and `postgresql-client`. Use `DATABASE_TY
 | CRON_EXPRESION | * * * * * | CRON expresion for the backup to happen. |
 | TELEGRAM_TOKEN | ******** | Telegram token from `BotFather` |
 | CHAT_ID | **** | Chat ID to where the backup will be sent. |
+| BACKUP_COMMAND | docker exec app mix backup /backups | Optional command override. If set, this command creates the file to upload. |
+| BACKUP_FILE | /backups/latest.sql.zip | File uploaded after `BACKUP_COMMAND`. Defaults to `/tmp/backup_${DATABASE_NAME}_latest.sql`. |
 
 ### Integration with existing project
 
@@ -44,3 +46,26 @@ services:
 ```
 
 > Provided that you added the required variables in the `.env` file, by running `docker compose up` on your project, `docker compose` will pick both `docker-compose.yml` and `docker-compose.override.yml` files and so, both projects will be on the same network and no ports need to be exported.
+
+### Custom backup command
+
+If your app already has a backup task, use `BACKUP_COMMAND`. The command must create `BACKUP_FILE`; that file is uploaded as-is.
+
+Example using another container through the Docker socket:
+
+```yaml
+services:
+  telegrambot:
+    image: ghcr.io/hkfuertes/telegram-db-backup:master
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backups:/backups
+    environment:
+      - BACKUP_COMMAND=docker exec doceacordes-backend sh -lc 'mix backup /backups && cp "$$(ls -t /backups/*.sql.zip | head -n1)" /backups/telegram-latest.sql.zip'
+      - BACKUP_FILE=/backups/telegram-latest.sql.zip
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - CRON_EXPRESION=${CRON_EXPRESION}
+```
+
+Warning: mounting `/var/run/docker.sock` gives this container Docker control over the host.
