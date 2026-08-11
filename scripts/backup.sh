@@ -15,6 +15,7 @@ if [ -n "${BACKUP_COMMAND}" ]; then
         echo "[${TIME}] ERROR: BACKUP_COMMAND did not create BACKUP_FILE: ${BACKUP_FILE}"
         exit 1
     fi
+    echo "[${TIME}] Custom backup file: ${BACKUP_FILE}"
     UPLOAD_FILE="${BACKUP_FILE}"
 else
     echo "[${TIME}] Backing up ${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME} (${DATABASE_TYPE})..."
