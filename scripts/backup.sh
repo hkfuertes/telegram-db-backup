@@ -11,8 +11,11 @@ BACKUP_FILE=${BACKUP_FILE:-/tmp/backup_${BACKUP_NAME}_latest.sql}
 if [ -n "${BACKUP_COMMAND}" ]; then
     echo "[${TIME}] Running custom backup command..."
     sh -c "${BACKUP_COMMAND}"
-    if [ ! -f "${BACKUP_FILE}" ]; then
-        echo "[${TIME}] ERROR: BACKUP_COMMAND did not create BACKUP_FILE: ${BACKUP_FILE}"
+    if [ -n "${BACKUP_FILE_COMMAND}" ]; then
+        BACKUP_FILE=$(sh -c "${BACKUP_FILE_COMMAND}")
+    fi
+    if [ -z "${BACKUP_FILE}" ] || [ ! -f "${BACKUP_FILE}" ]; then
+        echo "[${TIME}] ERROR: backup file not found: ${BACKUP_FILE}"
         exit 1
     fi
     echo "[${TIME}] Custom backup file: ${BACKUP_FILE}"
