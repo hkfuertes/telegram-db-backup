@@ -24,6 +24,7 @@ The image includes `mysql-client`, `postgresql-client`, and `docker-cli`. Use `D
 | CHAT_ID | **** | Chat ID to where the backup will be sent. |
 | BACKUP_COMMAND | docker exec app mix backup /backups | Optional command override. If set, this command creates the file to upload. |
 | BACKUP_FILE | /backups/latest.sql.zip | File uploaded after `BACKUP_COMMAND`. Defaults to `/tmp/backup_${DATABASE_NAME}_latest.sql`. |
+| BACKUP_FILE_COMMAND | ls -t /backups/*.sql.zip \| head -n1 | Optional command run after `BACKUP_COMMAND`; its stdout becomes the file to upload. Takes precedence over `BACKUP_FILE`. |
 
 ### Integration with existing project
 
@@ -51,6 +52,8 @@ services:
 
 If your app already has a backup task, use `BACKUP_COMMAND`. The command must create `BACKUP_FILE`; that file is uploaded as-is.
 
+If the backup task creates dynamic filenames, set `BACKUP_FILE_COMMAND`. It runs after `BACKUP_COMMAND`; its stdout becomes the file uploaded.
+
 Example using another container through the Docker socket:
 
 ```yaml
@@ -61,11 +64,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./backups:/backups
     environment:
-      - BACKUP_COMMAND=docker exec doceacordes-backend sh -lc 'mix backup /backups && cp "$$(ls -t /backups/*.sql.zip | head -n1)" /backups/telegram-latest.sql.zip'
-      - BACKUP_FILE=/backups/telegram-latest.sql.zip
-      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-      - CHAT_ID=${CHAT_ID}
-      - CRON_EXPRESION=${CRON_EXPRESION}
+      BACKUP_COMMAND: docker exec doceacordes-backend manage backup /backups
+      BACKUP_FILE_COMMAND: "ls -t /backups/doceacordes_*.sql.zip | head -n1"
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      CHAT_ID: ${CHAT_ID}
+      CRON_EXPRESION: ${CRON_EXPRESION}
 ```
 
 Warning: mounting `/var/run/docker.sock` gives this container Docker control over the host.
