@@ -72,3 +72,10 @@ services:
 ```
 
 Warning: mounting `/var/run/docker.sock` gives this container Docker control over the host.
+
+> **Gotcha with compose `include:`**: if this service lives in a file loaded via `include:`
+> (e.g. `sidecars/telegrambot.yml`), relative volumes resolve against **that file's directory**,
+> not the main compose file's. `./backups:/backups` then mounts `<main dir>/sidecars/backups`
+> (empty) while your app writes backups to `<main dir>/backups` — the backup runs but the file
+> is never found (`ERROR: backup file not found`). Use `../backups:/backups` or an absolute
+> path so both containers share the same host directory.
